@@ -1,0 +1,10 @@
+Django==2.2.3
+gunicorn
+Pillow==5.4.1
+psycopg2
+channels
+channels_redis
+daphne
+django-tinymce4-lite
+celery
+redis

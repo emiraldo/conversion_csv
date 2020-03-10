@@ -1,0 +1,13 @@
+.pgdata/
+.vscode/
+env/
+.env
+.DS_Store
+.idea/
+*.pyc
+src/.idea/
+src/*/__pycache__/
+src/*/migrations/00*.py
+src/conversion_csv/static/
+src/conversion_csv/media/
+.DS_Store
