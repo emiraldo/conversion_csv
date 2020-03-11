@@ -34,7 +34,13 @@
             <div class="form-group">
                 <label for="separator" class="col-md-3 col-sm-3 col-xs-12 control-label">Seperador: </label>
                 <div class="col-md-8">
-                    <input type="text" max="1" name="separator" id="separator" required class="" placeholder=",    \t    ;    ' '    :">
+                    <select class="form-control" name="separator" id="separator" required>
+                        <option value=",">, </option>
+                        <option value=" ">' ' (espacio en blanco)</option>
+                        <option value="\t">\t</option>
+                        <option value=";">;</option>
+                        <option value=":">:</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
@@ -67,7 +73,9 @@
     const token = "{{ token }}";
     var ws = new WebSocket("ws://" + window.location.host + "/ws/upload-csv/" + token + "/");
     ws.onmessage = function (event) {
+
         let data = JSON.parse(event.data);
+
         $('#' + data.id).find('#success_rows').html("Registros creados: " + data.success_rows);
         $('#' + data.id).find('#error_rows').html("Registros erroneos: " + data.error_rows);
 
@@ -96,8 +104,8 @@
                     $("#uploaded_files").append(
                         "<div class='panel panel-default'><div class='panel-body' id='" + data.id[x] + "'>" +
                         "<p id='file_name'>Archivo: <strong>" + data.file_name[x] + "</strong></p>" +
-                        "<p id='success_rows'>0</p>"  +
-                        "<p id='error_rows'>0</p>" +
+                        "<p id='success_rows'>Registros creados: 0</p>"  +
+                        "<p id='error_rows'>Registros erroneos: 0</p>" +
                         "</div></div>"
                     );
                 }
