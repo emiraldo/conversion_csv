@@ -43,6 +43,7 @@ class UploadedFileCreateView(CreateView):
         return JsonResponse(
             data={
                 "token": self.object.token,
+                "file_name": self.object.file.name.replace('uploaded_files/', ''),
                 "id": self.object.id
             },
             status=200

@@ -21,14 +21,14 @@ class UploadCSVConsumer(AsyncWebsocketConsumer):
         await self.accept()
         print("se conecta")
 
-        today = date.today()
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'send_message',
-                'message': str(today)
-            }
-        )
+        # today = date.today()
+        # await self.channel_layer.group_send(
+        #     self.room_group_name,
+        #     {
+        #         'type': 'send_message',
+        #         'message': str(today)
+        #     }
+        # )
 
     async def disconnect(self, close_code):
         # Leave room group
