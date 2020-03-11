@@ -18,33 +18,39 @@ class IndexTemplateView(TemplateView):
         return context
 
 
-class UploadedFileCreateView(CreateView):
-
-    model = UploadedFile
-    fields = 'file', 'separator', 'token'
-
-    def get_form(self, form_class=None):
-        form = super(UploadedFileCreateView, self).get_form()
-
-        for key in form.fields:
-            form.fields[key].widget.attrs["class"] = "form-control"
-
-        form.fields['separator'].strip = False
-        return form
-
-    def form_invalid(self, form):
-        return JsonResponse(form.errors, status=400)
+class UploadedFileCreateView(TemplateView):
 
 
-    def form_valid(self, form):
-        self.object = form.save()
-        process_csv_file.delay(self.object.id, self.object.token, self.object.file.path, self.object.separator)
+    def post(self, request, *args, **kwargs):
+        files = request.FILES.getlist('file')
+        if files:
+            files_name = []
+            files_id = []
+            for file in files:
+                #Create register
+                new_csv = UploadedFile.objects.create(
+                    file=file,
+                    separator=request.POST.get('separator'),
+                    token=request.POST.get('token')
+                )
+                files_name.append(new_csv.file.name.replace('uploaded_files/', ''))
+                files_id.append(new_csv.pk)
 
-        return JsonResponse(
-            data={
-                "token": self.object.token,
-                "file_name": self.object.file.name.replace('uploaded_files/', ''),
-                "id": self.object.id
-            },
-            status=200
-        )
+                process_csv_file.delay(new_csv.id, new_csv.token, new_csv.file.path, new_csv.separator)
+
+            return JsonResponse(
+                data={
+                    "token": request.POST.get('token'),
+                    "file_name": files_name,
+                    "id": files_id
+                },
+                status=200
+            )
+
+        else:
+            return JsonResponse(
+                data={
+                    "token": request.POST.get('separator')
+                },
+                status=400
+            )

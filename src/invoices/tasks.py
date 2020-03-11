@@ -5,13 +5,11 @@ from celery import shared_task
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-from invoices.models import Invoice, InvoiceDetail
+from invoices.models import UploadedFile, Invoice, InvoiceDetail
 
 
 @shared_task()
 def process_csv_file(id, token, csv_file, separator):
-    print(separator)
-    print(len(separator))
     with open(csv_file, 'r') as file:
         reader = csv.DictReader(file, delimiter=separator, skipinitialspace=True, quoting=csv.QUOTE_ALL)
 
@@ -68,5 +66,5 @@ def process_csv_file(id, token, csv_file, separator):
                     }
                 }
             )
-    print(token)
-    print(csv_file)
+
+    UploadedFile.objects.get(pk=id).delete()

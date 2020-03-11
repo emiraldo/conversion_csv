@@ -9,3 +9,4 @@ redis
 channels
 channels_redis
 daphne
+django-cleanup
