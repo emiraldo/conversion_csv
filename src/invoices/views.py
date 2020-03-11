@@ -5,8 +5,8 @@ from django.http import JsonResponse, HttpResponseRedirect
 # Create your views here.
 from django.views.generic import TemplateView, CreateView
 
-from facturas.models import UploadedFile
-from facturas.tasks import process_csv_file
+from invoices.models import UploadedFile
+from invoices.tasks import process_csv_file
 
 
 class IndexTemplateView(TemplateView):
@@ -28,6 +28,8 @@ class UploadedFileCreateView(CreateView):
 
         for key in form.fields:
             form.fields[key].widget.attrs["class"] = "form-control"
+
+        form.fields['separator'].strip = False
         return form
 
     def form_invalid(self, form):
@@ -36,10 +38,12 @@ class UploadedFileCreateView(CreateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        print("se crea el registro")
-        process_csv_file.delay(self.object.token, self.object.file.path)
-        print("envio la tarea asincrona")
+        process_csv_file.delay(self.object.id, self.object.token, self.object.file.path, self.object.separator)
+
         return JsonResponse(
-            data={"token": self.object.token},
+            data={
+                "token": self.object.token,
+                "id": self.object.id
+            },
             status=200
         )

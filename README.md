@@ -18,6 +18,11 @@ POSTGRES_DB
 ``` bash
 docker-compose build --no-cache
 docker-compose up
+
+make migrate
+make statics
+make superuser
+
 ```
 
 ### Makefile

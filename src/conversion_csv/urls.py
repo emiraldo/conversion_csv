@@ -18,7 +18,7 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 
-from facturas.views import IndexTemplateView, UploadedFileCreateView
+from invoices.views import IndexTemplateView, UploadedFileCreateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
