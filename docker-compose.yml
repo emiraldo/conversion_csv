@@ -10,14 +10,12 @@ services:
       context: ./postgres
 
   redis:
-    image: 'bitnami/redis:latest'
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+    image: "redis:alpine"
 
   django:
     build: ./src
-    command: gunicorn -b :8000 -w 2 conversion_csv.wsgi:application --reload --timeout 3600
-    # command: daphne -b 0.0.0.0 -p 9000 conversion_csv.asgi:application
+    # command: gunicorn -b :8000 -w 2 conversion_csv.wsgi:application --reload --timeout 3600
+    command: daphne -b 0.0.0.0 -p 8000 conversion_csv.asgi:application
     volumes:
       - ./src:/usr/src/app
     depends_on:
@@ -31,8 +29,11 @@ services:
   celery:
     build: ./src
     command: celery worker -A conversion_csv -l info
+    volumes:
+      - ./src/conversion_csv/media/:/usr/src/app/conversion_csv/media/
     depends_on:
       - redis
+      - django
     env_file: .env
     environment:
       - DJANGO_SETTINGS_MODULE=conversion_csv.settings.dev

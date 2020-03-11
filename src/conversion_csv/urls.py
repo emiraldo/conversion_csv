@@ -18,7 +18,11 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 
+from facturas.views import IndexTemplateView, UploadedFileCreateView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', IndexTemplateView.as_view(), name='index'),
+    path('upload-csv-file/', UploadedFileCreateView.as_view(), name='upload_csv_file'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

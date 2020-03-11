@@ -1,10 +1,11 @@
-Django==2.2.3
+django
 gunicorn
-Pillow==5.4.1
 psycopg2
+sentry-sdk
+pillow
+django-solo
+celery
+redis
 channels
 channels_redis
 daphne
-django-tinymce4-lite
-celery
-redis
